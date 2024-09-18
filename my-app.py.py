@@ -1,12 +1,8 @@
 import streamlit as st
 import pandas as pd
-pip install plotly
-import plotly.express as px
-import plotly.graph_objects as graph_objects
 import matplotlib.pyplot as plt 
 import seaborn as sns
-.\venv\Scripts\activate
-pip show plotly
+
 path = "https://linked.aub.edu.lb/pkgcube/data/b49644dfb203975571146f1ff8d4fee1_20240907_152325.csv"
 df = pd.read_csv(path)
 
