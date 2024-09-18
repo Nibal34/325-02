@@ -1,12 +1,14 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as graph_objects
+import matplotlib.pyplot as plt 
+import seaborn as sns
 
-# Load the dataset
 path = "https://linked.aub.edu.lb/pkgcube/data/b49644dfb203975571146f1ff8d4fee1_20240907_152325.csv"
 df = pd.read_csv(path)
 
-# Clean up the column names
+# Clean up the column names by stripping any leading or trailing spaces
 df.columns = df.columns.str.strip()
 
 # Select the number of towns to display (Slider)
@@ -33,16 +35,19 @@ plt.tight_layout()
 # Display the plot using Streamlit
 st.pyplot(fig)
 
+# Strip any leading or trailing spaces in column names
+df.columns = df.columns.str.strip()
+
 # Calculate the average family size using weighted sums
 df['Average family size'] = (
     1.5 * df['Average family size - 1 to 3 members'] + 
     5 * df['Average family size - 4 to 6 members'] + 
     7 * df['Average family size - 7 or more members']
-) / (
-    df['Average family size - 1 to 3 members'] +
-    df['Average family size - 4 to 6 members'] +
-    df['Average family size - 7 or more members']
-)
+    ) / (
+        df['Average family size - 1 to 3 members'] +
+        df['Average family size - 4 to 6 members'] +
+        df['Average family size - 7 or more members']
+    )
 
 # Allow the user to select specific towns
 selected_towns = st.multiselect(
@@ -58,7 +63,7 @@ percentage_eldelry = df['Percentage of Eldelry - 65 or more years']
 
 # Create the scatter plot using Matplotlib
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.scatter(average_family_size, percentage_eldelry, color='blue', alpha=0.4, s=100)
+ax.scatter(average_family_size, percentage_eldelry, color='blue', alpha=0.4, edgecolor='pink', s=100)
 
 # Add plot titles and labels
 ax.set_title('Scatter Plot of Average Family Size vs. Percentage of Eldelry', fontsize=12)
@@ -76,7 +81,7 @@ plt.grid(True, linestyle='--', alpha=0.1)
 # Display the plot in Streamlit
 st.pyplot(fig)
 
-# Sample data for pie chart
+# Sample data (replace this with your actual data or file uploader)
 data = {
     'Town': ['Town A', 'Town B', 'Town C'],
     'Percentage of Women': [55, 60, 65],
@@ -84,7 +89,7 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# Streamlit form for selecting a town
+# Streamlit form for selecting a row
 with st.form(key='my_form'):
     st.write("Select a town to view gender distribution:")
     
@@ -110,5 +115,4 @@ if submit_button:
     plt.title(f"Gender Distribution in {selected_row['Town']}")
     
     # Display the plot in Streamlit
-    fig = plt.gcf()  # Get current figure
-    st.pyplot(fig)
+    st.pyplot(plt)
